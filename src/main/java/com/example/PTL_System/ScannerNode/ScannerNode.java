@@ -2,39 +2,40 @@ package com.example.PTL_System.ScannerNode;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 
 @Data
-@Document
+@Document(collection = "ScannerNode")
 public class ScannerNode {
     @Id
     private String id;
     private String scanContent;
-    private boolean confimation_flag;
-    private int code_mode_select;
-    private int scannerState;
+    private String confimationFlag;
+    private String CodeModeSelect;
+    private String scannerState;
     private String apWifiSsid;
     private String apWifiPW;        //encrypt later
     private String assignedParam;
     private String masterIP;
+    @Indexed(unique = true)
     private String ownIP;
 
     private LocalDateTime created;
 
 
-    public ScannerNode(String scanContent, boolean confimation_flag, int code_mode_select, int scannerState, String apWifiSsid, String apWifiPW, String assignedParam, String masterIP, String ownIP, LocalDateTime created) {
+    public ScannerNode(String scanContent, String confimationFlag, String CodeModeSelect, String scannerState, String apWifiSsid, String apWifiPW, String assignedParam, String masterIP, String ownIP) {
         this.scanContent = scanContent;
-        this.confimation_flag = confimation_flag;
-        this.code_mode_select = code_mode_select;
+        this.confimationFlag = confimationFlag;
+        this.CodeModeSelect = CodeModeSelect;
         this.scannerState = scannerState;
         this.apWifiSsid = apWifiSsid;
         this.apWifiPW = apWifiPW;
         this.assignedParam = assignedParam;
         this.masterIP = masterIP;
         this.ownIP = ownIP;
-        this.created = created;
     }
 
     public String getId() {
@@ -53,27 +54,27 @@ public class ScannerNode {
         this.scanContent = scanContent;
     }
 
-    public boolean isConfimation_flag() {
-        return confimation_flag;
+    public String getConfimationFlag() {
+        return confimationFlag;
     }
 
-    public void setConfimation_flag(boolean confimation_flag) {
-        this.confimation_flag = confimation_flag;
+    public void setConfimationFlag(String confimation_flag) {
+        this.confimationFlag = confimation_flag;
     }
 
-    public int getCode_mode_select() {
-        return code_mode_select;
+    public String getCodeModeSelect() {
+        return CodeModeSelect;
     }
 
-    public void setCode_mode_select(int code_mode_select) {
-        this.code_mode_select = code_mode_select;
+    public void setCodeModeSelect(String code_mode_select) {
+        this.CodeModeSelect = code_mode_select;
     }
 
-    public int getScannerState() {
+    public String getScannerState() {
         return scannerState;
     }
 
-    public void setScannerState(int scannerState) {
+    public void setScannerState(String scannerState) {
         this.scannerState = scannerState;
     }
 

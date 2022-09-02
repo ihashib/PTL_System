@@ -2,12 +2,13 @@ package com.example.PTL_System.SubNode;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 
 @Data
-@Document
+@Document(collection = "SubNode")
 public class SubNode {
     @Id
     private String id;
@@ -18,6 +19,7 @@ public class SubNode {
     private String meshPW;
     private String meshPort;
     private String masterIP;
+    @Indexed(unique = true)
     private String ownIP;
     private int lightMode;
     private int alarmVol;
@@ -25,7 +27,7 @@ public class SubNode {
     private int boxState;
     private LocalDateTime created;
 
-    public SubNode(String content, String apWifiSsid, String apWifiPW, String meshPrefix, String meshPW, String meshPort, String masterIP, String ownIP, int lightMode, int alarmVol, int lightBlinkMode, int boxState, LocalDateTime created) {
+    public SubNode(String content, String apWifiSsid, String apWifiPW, String meshPrefix, String meshPW, String meshPort, String masterIP, String ownIP, int lightMode, int alarmVol, int lightBlinkMode, int boxState) {
         this.content = content;
         this.apWifiSsid = apWifiSsid;
         this.apWifiPW = apWifiPW;
@@ -38,7 +40,6 @@ public class SubNode {
         this.alarmVol = alarmVol;
         this.lightBlinkMode = lightBlinkMode;
         this.boxState = boxState;
-        this.created = created;
     }
 
     public String getId() {

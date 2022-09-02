@@ -8,13 +8,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 
 @Data
-@Document
+@Document(collection = "MasterNode")
 public class MasterNode {
     @Id
     private String id;
     private String scannerNodeCount;
     private String subNodeCount;
-    private boolean meshNetworkState;
+    private String meshNetworkState;
     private String apWifiSsid;
     private String apWifiPW;        //encrypt later
     private String assignedParam;
@@ -23,7 +23,7 @@ public class MasterNode {
 
     private LocalDateTime created;
 
-    public MasterNode(String scannerNodeCount, String subNodeCount, boolean meshNetworkState, String apWifiSsid, String apWifiPW, String assignedParam, String ownIP, LocalDateTime created) {
+    public MasterNode(String scannerNodeCount, String subNodeCount, String meshNetworkState, String apWifiSsid, String apWifiPW, String assignedParam, String ownIP, LocalDateTime created) {
         this.scannerNodeCount = scannerNodeCount;
         this.subNodeCount = subNodeCount;
         this.meshNetworkState = meshNetworkState;
@@ -58,11 +58,11 @@ public class MasterNode {
         this.subNodeCount = subNodeCount;
     }
 
-    public boolean isMeshNetworkState() {
+    public String isMeshNetworkState() {
         return meshNetworkState;
     }
 
-    public void setMeshNetworkState(boolean meshNetworkState) {
+    public void setMeshNetworkState(String meshNetworkState) {
         this.meshNetworkState = meshNetworkState;
     }
 
