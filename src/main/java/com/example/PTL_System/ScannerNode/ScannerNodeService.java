@@ -1,9 +1,13 @@
 package com.example.PTL_System.ScannerNode;
 
 import com.example.PTL_System.SubNode.SubNode;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
@@ -63,5 +67,41 @@ public class ScannerNodeService {
         {
             return "Delete fail, "+e;
         }
+    }
+
+    public String scannerNodeACK(String id, ScannerNode scannerNode) throws JsonProcessingException {
+        Optional<ScannerNode> scannerNodeACKOptional = scannerNodeRepo.findById(id);
+
+        if(scannerNodeACKOptional.isPresent())
+        {
+            ScannerNode scannerNodeACK = scannerNodeACKOptional.get();
+
+            String uri = "http://localhost:8080/api/ptl/ScannerNode/dummyResponse";
+
+            RestTemplate restTemplate = new RestTemplate();
+
+            try {
+                @SuppressWarnings("unchecked")
+                List<ScannerNode> result = restTemplate.getForObject(uri, List.class);
+                ObjectMapper mapper = new ObjectMapper();
+
+                boolean flag = scannerNode.equals(mapper.convertValue(result.get(0), new TypeReference<ScannerNode>() {
+                }));
+
+                if (scannerNodeACK.equals(scannerNode) && flag) {
+                    scannerNodeACK.setScannerNodeAndServerAck(scannerNodeACK.ScannerNodeACKOK(true));
+
+                    scannerNodeRepo.save(scannerNodeACK);
+
+                    return "ScannerNode -> Master -> Server ACK status: " + scannerNodeACK.getScannerNodeAndServerAck();
+                }
+            }
+            catch (Exception e)
+            {
+                System.out.println("ScannerNode -> Master -> Server ACK FAIL, Exception: "+e);
+            }
+        }
+
+        return "call post of scannernode from here and show on font end";
     }
 }

@@ -1,5 +1,7 @@
 package com.example.PTL_System.ScannerNode;
 
+import com.example.PTL_System.SubNode.SubNode;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,5 +34,16 @@ public class ScannerNodeController {
     public String deleteScannerNodeById(@PathVariable String id)
     {
         return scannerNodeService.deleteScannerNodeById(id);
+    }
+
+    @PostMapping(value = "api/ptl/ScannerNode/{id}/ack")
+    public String getScannerNodeACK(@PathVariable("id") String id, @RequestBody ScannerNode scannerNode) throws JsonProcessingException {
+        return scannerNodeService.scannerNodeACK(id, scannerNode);
+    }
+
+    @GetMapping(value="api/ptl/ScannerNode/dummyResponse")
+    public List<ScannerNode> getDummyResponse()
+    {
+        return scannerNodeService.getAllScannerNodes();
     }
 }

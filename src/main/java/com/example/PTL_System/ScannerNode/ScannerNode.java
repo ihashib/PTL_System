@@ -25,8 +25,12 @@ public class ScannerNode {
 
     private LocalDateTime created;
 
+    private String scannerNodeAndServerAck;
 
-    public ScannerNode(String scanContent, String confimationFlag, String CodeModeSelect, String scannerState, String apWifiSsid, String apWifiPW, String assignedParam, String masterIP, String ownIP) {
+
+    public ScannerNode(String scanContent, String confimationFlag, String CodeModeSelect, String scannerState,
+                       String apWifiSsid, String apWifiPW, String assignedParam, String masterIP, String ownIP,
+                       String scannerNodeAndServerAck) {
         this.scanContent = scanContent;
         this.confimationFlag = confimationFlag;
         this.CodeModeSelect = CodeModeSelect;
@@ -36,6 +40,10 @@ public class ScannerNode {
         this.assignedParam = assignedParam;
         this.masterIP = masterIP;
         this.ownIP = ownIP;
+        this.scannerNodeAndServerAck = scannerNodeAndServerAck;
+    }
+
+    public ScannerNode() {
     }
 
     public String getId() {
@@ -124,5 +132,21 @@ public class ScannerNode {
 
     public void setCreated(LocalDateTime created) {
         this.created = created;
+    }
+
+    public String getScannerNodeAndServerAck() {
+        return scannerNodeAndServerAck;
+    }
+
+    public void setScannerNodeAndServerAck(String scannerNodeAndServerAck) {
+        this.scannerNodeAndServerAck = scannerNodeAndServerAck;
+    }
+
+    public String ScannerNodeACKOK(boolean flag)
+    {
+        if(flag)
+            return "ACKOK";
+        else
+            return "ACKFAIL";
     }
 }

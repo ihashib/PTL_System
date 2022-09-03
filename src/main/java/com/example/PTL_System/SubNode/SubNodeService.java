@@ -1,8 +1,13 @@
 package com.example.PTL_System.SubNode;
 
+import com.example.PTL_System.MasterNode.MasterNode;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
@@ -64,5 +69,41 @@ public class SubNodeService {
         {
             return "Delete fail, "+e;
         }
+    }
+
+    public String subNodeACK(String id, SubNode subNode) throws JsonProcessingException {
+        Optional<SubNode> subNodeACKOptional = subNodeRepo.findById(id);
+
+        if(subNodeACKOptional.isPresent())
+        {
+            SubNode subNodeACK = subNodeACKOptional.get();
+
+            String uri = "http://localhost:8080/api/ptl/SubNode/dummyResponse";
+
+            RestTemplate restTemplate = new RestTemplate();
+
+            try {
+                @SuppressWarnings("unchecked")
+                List<SubNode> result = restTemplate.getForObject(uri, List.class);
+                ObjectMapper mapper = new ObjectMapper();
+
+                boolean flag = subNode.equals(mapper.convertValue(result.get(0), new TypeReference<SubNode>() {
+                }));
+
+                if (subNodeACK.equals(subNode) && flag) {
+                    subNodeACK.setSubNodeAndServerAck(subNodeACK.SubNodeACKOK(true));
+
+                    subNodeRepo.save(subNodeACK);
+
+                    return "SubNode -> Master -> Server ACK status: " + subNodeACK.getSubNodeAndServerAck();
+                }
+            }
+            catch (Exception e)
+            {
+                System.out.println("SubNode -> Master -> Server ACK FAIL, Exception: "+e);
+            }
+        }
+
+        return "call post of subnode from here and show on font end";
     }
 }

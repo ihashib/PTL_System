@@ -25,9 +25,15 @@ public class SubNode {
     private int alarmVol;
     private int lightBlinkMode;
     private int boxState;
+    private String SubNodeAndServerAck;
     private LocalDateTime created;
 
-    public SubNode(String content, String apWifiSsid, String apWifiPW, String meshPrefix, String meshPW, String meshPort, String masterIP, String ownIP, int lightMode, int alarmVol, int lightBlinkMode, int boxState) {
+    public SubNode() {
+    }
+
+    public SubNode(String content, String apWifiSsid, String apWifiPW, String meshPrefix, String meshPW,
+                   String meshPort, String masterIP, String ownIP, int lightMode, int alarmVol, int lightBlinkMode,
+                   int boxState, String SubNodeAndServerAck, LocalDateTime created) {
         this.content = content;
         this.apWifiSsid = apWifiSsid;
         this.apWifiPW = apWifiPW;
@@ -40,6 +46,8 @@ public class SubNode {
         this.alarmVol = alarmVol;
         this.lightBlinkMode = lightBlinkMode;
         this.boxState = boxState;
+        this.SubNodeAndServerAck = SubNodeAndServerAck;
+        this.created = created;
     }
 
     public String getId() {
@@ -152,5 +160,41 @@ public class SubNode {
 
     public void setCreated(LocalDateTime created) {
         this.created = created;
+    }
+
+    public String getSubNodeAndServerAck() {
+        return SubNodeAndServerAck;
+    }
+
+    public void setSubNodeAndServerAck(String subNodeAndServerAck) {
+        SubNodeAndServerAck = subNodeAndServerAck;
+    }
+    public String SubNodeACKOK(boolean flag)
+    {
+        if(flag)
+            return "ACKOK";
+        else
+            return "ACKFAIL";
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "id=" + id + "" +
+                ", content=" + content + "" +
+                ", apWifiSsid=" + apWifiSsid + "" +
+                ", apWifiPW=" + apWifiPW + "" +
+                ", meshPrefix=" + meshPrefix + "" +
+                ", meshPW=" + meshPW + "" +
+                ", meshPort=" + meshPort + "" +
+                ", masterIP=" + masterIP + "" +
+                ", ownIP=" + ownIP + "" +
+                ", lightMode=" + lightMode +
+                ", alarmVol=" + alarmVol +
+                ", lightBlinkMode=" + lightBlinkMode +
+                ", boxState=" + boxState +
+                ", SubNodeAndServerAck=" + SubNodeAndServerAck + "" +
+                ", created=" + created +
+                '}';
     }
 }

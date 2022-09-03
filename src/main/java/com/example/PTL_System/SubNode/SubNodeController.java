@@ -1,5 +1,7 @@
 package com.example.PTL_System.SubNode;
 
+import com.example.PTL_System.MasterNode.MasterNode;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,5 +35,16 @@ public class SubNodeController {
     public String deleteSubNodeById(@PathVariable String id)
     {
         return subNodeService.deleteSubNodeById(id);
+    }
+
+    @PostMapping(value = "api/ptl/SubNode/{id}/ack")
+    public String getSubNodeACK(@PathVariable("id") String id, @RequestBody SubNode subNode) throws JsonProcessingException {
+        return subNodeService.subNodeACK(id, subNode);
+    }
+
+    @GetMapping(value="api/ptl/SubNode/dummyResponse")
+    public List<SubNode> getDummyResponse()
+    {
+        return subNodeService.getAllSubNodes();
     }
 }

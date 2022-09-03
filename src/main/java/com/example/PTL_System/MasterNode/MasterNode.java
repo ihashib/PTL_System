@@ -42,19 +42,6 @@ public class MasterNode {
         this.created = created;
     }
 
-   /* public MasterNode(String scannerNodeCount, String subNodeCount, String meshNetworkState, String apWifiSsid,
-                      String apWifiPW, String assignedParam, String ownIP, LocalDateTime created) {
-        this.scannerNodeCount = scannerNodeCount;
-        this.subNodeCount = subNodeCount;
-        this.meshNetworkState = meshNetworkState;
-        this.apWifiSsid = apWifiSsid;
-        this.apWifiPW = apWifiPW;
-        this.assignedParam = assignedParam;
-        this.ownIP = ownIP;
-        this.created = created;
-        this.masterAndServerAck = MasterACKOK(false);
-    }
-*/
     public String getId() {
         return id;
     }
