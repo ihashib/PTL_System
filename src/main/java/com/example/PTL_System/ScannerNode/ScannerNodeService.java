@@ -16,6 +16,7 @@ import java.util.Optional;
 @Service
 public class ScannerNodeService {
     private final ScannerNodeRepo scannerNodeRepo;
+    private final ScanDataRepo scanDataRepo;
 
     public List<ScannerNode> getAllScannerNodes()
     {
@@ -104,4 +105,17 @@ public class ScannerNodeService {
 
         return "call post of scannernode from here and show on font end";
     }
+
+    public String createScanData(ScanData scanData)
+    {
+       ScanData insertedScanData = scanDataRepo.save(scanData);
+
+        return "Scanner Data created, id: "+insertedScanData.getId();
+    }
+
+    public List<ScanData> getAllScanData()
+    {
+        return scanDataRepo.findAll();
+    }
+
 }

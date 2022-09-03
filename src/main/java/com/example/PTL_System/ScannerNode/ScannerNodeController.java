@@ -46,4 +46,16 @@ public class ScannerNodeController {
     {
         return scannerNodeService.getAllScannerNodes();
     }
+
+    @PostMapping(value="api/ptl/ScannerNode/ScanData/scan")
+    public String createScannData(@RequestBody  ScanData scanData)
+    {
+        return scannerNodeService.createScanData(scanData);
+    }
+
+    @GetMapping(value="api/ptl/ScannerNode/ScanData/all")
+    public List<ScanData> getAllScanData()
+    {
+        return scannerNodeService.getAllScanData();
+    }
 }
