@@ -1,10 +1,16 @@
 package com.example.PTL_System.MasterNode;
 
 import com.example.PTL_System.ScannerNode.ScannerNode;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import java.io.Serial;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,4 +68,41 @@ public class MasterNodeService {
             return "Delete fail, "+e;
         }
     }
+
+    public String masterNodeACK(String id, MasterNode masterNode) throws JsonProcessingException {
+        Optional<MasterNode> masterNodeACKOptional = masterNodeRepo.findById(id);
+
+        if(masterNodeACKOptional.isPresent())
+        {
+            MasterNode masterNodeACK = masterNodeACKOptional.get();
+
+            String uri = "http://localhost:8080/api/ptl/MasterNode/dummyResponse";
+
+            RestTemplate restTemplate = new RestTemplate();
+
+            try {
+                @SuppressWarnings("unchecked")
+                List<MasterNode> result = restTemplate.getForObject(uri, List.class);
+                ObjectMapper mapper = new ObjectMapper();
+
+                boolean flag = masterNode.equals(mapper.convertValue(result.get(0), new TypeReference<MasterNode>() {
+                }));
+
+                if (masterNodeACK.equals(masterNode) && flag) {
+                    masterNodeACK.setMasterAndServerAck(masterNodeACK.MasterACKOK(true));
+
+                    masterNodeRepo.save(masterNodeACK);
+
+                    return "Master -> Server ACK status: " + masterNodeACK.getMasterAndServerAck();
+                }
+            }
+            catch (Exception e)
+            {
+                System.out.println("Master -> Server ACK FAIL, Exception: "+e);
+            }
+        }
+
+        return "call post of masternode from here and show on font end";
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.example.PTL_System.MasterNode;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -20,10 +21,29 @@ public class MasterNode {
     private String assignedParam;
     @Indexed(unique = true)
     private String ownIP;
+    private String masterAndServerAck;
 
     private LocalDateTime created;
 
-    public MasterNode(String scannerNodeCount, String subNodeCount, String meshNetworkState, String apWifiSsid, String apWifiPW, String assignedParam, String ownIP, LocalDateTime created) {
+    public MasterNode() {
+    }
+
+    public MasterNode(String id, String scannerNodeCount, String subNodeCount, String meshNetworkState,
+                      String apWifiSsid, String apWifiPW, String assignedParam, String ownIP, String masterAndServerAck, LocalDateTime created) {
+        this.id = id;
+        this.scannerNodeCount = scannerNodeCount;
+        this.subNodeCount = subNodeCount;
+        this.meshNetworkState = meshNetworkState;
+        this.apWifiSsid = apWifiSsid;
+        this.apWifiPW = apWifiPW;
+        this.assignedParam = assignedParam;
+        this.ownIP = ownIP;
+        this.masterAndServerAck = masterAndServerAck;
+        this.created = created;
+    }
+
+   /* public MasterNode(String scannerNodeCount, String subNodeCount, String meshNetworkState, String apWifiSsid,
+                      String apWifiPW, String assignedParam, String ownIP, LocalDateTime created) {
         this.scannerNodeCount = scannerNodeCount;
         this.subNodeCount = subNodeCount;
         this.meshNetworkState = meshNetworkState;
@@ -32,8 +52,9 @@ public class MasterNode {
         this.assignedParam = assignedParam;
         this.ownIP = ownIP;
         this.created = created;
+        this.masterAndServerAck = MasterACKOK(false);
     }
-
+*/
     public String getId() {
         return id;
     }
@@ -104,5 +125,37 @@ public class MasterNode {
 
     public void setCreated(LocalDateTime created) {
         this.created = created;
+    }
+
+    public String getMasterAndServerAck() {
+        return masterAndServerAck;
+    }
+
+    public String MasterACKOK(boolean flag)
+    {
+        if(flag)
+            return "ACKOK";
+        else
+            return "ACKFAIL";
+    }
+
+    public void setMasterAndServerAck(String masterAndServerAck) {
+        this.masterAndServerAck = masterAndServerAck;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "id=" + id + "" +
+                ", scannerNodeCount=" + scannerNodeCount + "" +
+                ", subNodeCount=" + subNodeCount + "" +
+                ", meshNetworkState=" + meshNetworkState + "" +
+                ", apWifiSsid=" + apWifiSsid + "" +
+                ", apWifiPW=" + apWifiPW + "" +
+                ", assignedParam=" + assignedParam + "" +
+                ", ownIP=" + ownIP + "" +
+                ", masterAndServerAck=" + masterAndServerAck + "" +
+                ", created=" + created +
+                '}';
     }
 }
