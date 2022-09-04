@@ -42,7 +42,7 @@ public class SubNodeController {
         return subNodeService.subNodeACK(id, subNode);
     }
 
-    @GetMapping(value="api/ptl/SubNode/dummyResponse")
+    @GetMapping(value="api/ptl/SubNode/AckResp")
     public List<SubNode> getDummyResponse()
     {
         return subNodeService.getAllSubNodes();

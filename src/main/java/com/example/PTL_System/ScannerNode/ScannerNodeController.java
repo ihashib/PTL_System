@@ -44,7 +44,7 @@ public class ScannerNodeController {
         return scannerNodeService.scannerNodeACK(id, scannerNode);
     }
 
-    @GetMapping(value="api/ptl/ScannerNode/dummyResponse")
+    @GetMapping(value="api/ptl/ScannerNode/AckResp")
     public List<ScannerNode> getDummyResponse()
     {
         return scannerNodeService.getAllScannerNodes();

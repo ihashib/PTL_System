@@ -21,7 +21,7 @@ public class MasterNodeController {
         return masterNodeService.getAllMasterNode();
     }
 
-    @GetMapping(value="api/ptl/MasterNode/dummyResponse")
+    @GetMapping(value="api/ptl/MasterNode/AckResp")
     public List<MasterNode> getDummyResponse()
     {
         return masterNodeService.getAllMasterNode();

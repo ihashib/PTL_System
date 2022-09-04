@@ -76,7 +76,7 @@ public class MasterNodeService {
         {
             MasterNode masterNodeACK = masterNodeACKOptional.get();
 
-            String uri = "http://localhost:8080/api/ptl/MasterNode/dummyResponse";
+            String uri = "http://localhost:8080/api/ptl/MasterNode/AckResp";
 
             RestTemplate restTemplate = new RestTemplate();
 

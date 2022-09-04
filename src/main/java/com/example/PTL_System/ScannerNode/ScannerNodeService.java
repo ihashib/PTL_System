@@ -77,7 +77,7 @@ public class ScannerNodeService {
         {
             ScannerNode scannerNodeACK = scannerNodeACKOptional.get();
 
-            String uri = "http://localhost:8080/api/ptl/ScannerNode/dummyResponse";
+            String uri = "http://localhost:8080/api/ptl/ScannerNode/AckResp";
 
             boolean flag = scannerNode.equals(getOtherAPI(uri, scannerNode));
 

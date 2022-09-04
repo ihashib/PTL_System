@@ -77,7 +77,7 @@ public class SubNodeService {
         {
             SubNode subNodeACK = subNodeACKOptional.get();
 
-            String uri = "http://localhost:8080/api/ptl/SubNode/dummyResponse";
+            String uri = "http://localhost:8080/api/ptl/SubNode/AckResp";
 
             RestTemplate restTemplate = new RestTemplate();
 
