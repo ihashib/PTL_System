@@ -3,7 +3,9 @@ package com.example.PTL_System.ScannerNode;
 import com.example.PTL_System.SubNode.SubNode;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 
@@ -11,6 +13,9 @@ import java.util.List;
 @AllArgsConstructor
 public class ScannerNodeController {
     private final ScannerNodeService scannerNodeService;
+
+    @Autowired
+    private WebClient.Builder webClientBuilder;
 
     @GetMapping(value="api/ptl/allScannerNode")
     public List<ScannerNode> getAllScannerNodes()
@@ -48,14 +53,20 @@ public class ScannerNodeController {
     }
 
     @PostMapping(value="api/ptl/ScannerNode/ScanData/scan")
-    public String createScannData(@RequestBody  ScanData scanData)
+    public ScanData createScannData(@RequestBody  ScanData scanData)
     {
-        return scannerNodeService.createScanData(scanData);
+        return scannerNodeService.createScanData(scanData, webClientBuilder);
     }
 
     @GetMapping(value="api/ptl/ScannerNode/ScanData/all")
     public List<ScanData> getAllScanData()
     {
         return scannerNodeService.getAllScanData();
+    }
+
+    @PostMapping(value="api/ptl/api/ptl/SubNode/{id}")
+    public ScanData getScanDataByID(@PathVariable("id")String id)
+    {
+        return scannerNodeService.getScanDataById(id);
     }
 }

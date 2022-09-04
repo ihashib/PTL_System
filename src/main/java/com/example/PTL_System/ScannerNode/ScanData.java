@@ -1,5 +1,8 @@
 package com.example.PTL_System.ScannerNode;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -21,7 +24,17 @@ public class ScanData {
     public ScanData() {
     }
 
-    public ScanData(String scannerId, String scanContent, String scannerMode, String subNodeId, String scanDataACK, LocalDateTime created) {
+    public ScanData(String scanContent, String scannerMode, String subNodeId, String scanDataACK, LocalDateTime created) {
+        this.scanContent = scanContent;
+        this.scannerMode = scannerMode;
+        this.subNodeId = subNodeId;
+        this.scanDataACK = scanDataACK;
+        this.created = created;
+    }
+    @JsonCreator
+    public ScanData(@JsonProperty("scannerId") String scannerId,@JsonProperty("scanContent") String scanContent,
+                    @JsonProperty("scannerMode") String scannerMode,@JsonProperty("subNodeId") String subNodeId,
+                    @JsonProperty("scanDataACK") String scanDataACK,@JsonProperty("created") LocalDateTime created) {
         this.scannerId = scannerId;
         this.scanContent = scanContent;
         this.scannerMode = scannerMode;
@@ -29,6 +42,8 @@ public class ScanData {
         this.scanDataACK = scanDataACK;
         this.created = created;
     }
+
+
 
     public String getId() {
         return id;

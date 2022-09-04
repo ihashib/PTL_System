@@ -6,9 +6,14 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -79,43 +84,89 @@ public class ScannerNodeService {
 
             String uri = "http://localhost:8080/api/ptl/ScannerNode/dummyResponse";
 
-            RestTemplate restTemplate = new RestTemplate();
+            boolean flag = scannerNode.equals(getOtherAPI(uri, scannerNode));
 
-            try {
-                @SuppressWarnings("unchecked")
-                List<ScannerNode> result = restTemplate.getForObject(uri, List.class);
-                ObjectMapper mapper = new ObjectMapper();
+            if (scannerNodeACK.equals(scannerNode) && flag) {
+                scannerNodeACK.setScannerNodeAndServerAck(scannerNodeACK.ScannerNodeACKOK(true));
 
-                boolean flag = scannerNode.equals(mapper.convertValue(result.get(0), new TypeReference<ScannerNode>() {
-                }));
+                scannerNodeRepo.save(scannerNodeACK);
 
-                if (scannerNodeACK.equals(scannerNode) && flag) {
-                    scannerNodeACK.setScannerNodeAndServerAck(scannerNodeACK.ScannerNodeACKOK(true));
-
-                    scannerNodeRepo.save(scannerNodeACK);
-
-                    return "ScannerNode -> Master -> Server ACK status: " + scannerNodeACK.getScannerNodeAndServerAck();
-                }
-            }
-            catch (Exception e)
-            {
-                System.out.println("ScannerNode -> Master -> Server ACK FAIL, Exception: "+e);
+                return "ScannerNode -> Master -> Server ACK status: " + scannerNodeACK.getScannerNodeAndServerAck();
             }
         }
 
         return "call post of scannernode from here and show on font end";
     }
 
-    public String createScanData(ScanData scanData)
+    public ScanData createScanData(ScanData scanData, WebClient.Builder webClientBuilder)
     {
-       ScanData insertedScanData = scanDataRepo.save(scanData);
+        System.out.println("Start");
+        scanDataRepo.insert(scanData);
 
-        return "Scanner Data created, id: "+insertedScanData.getId();
+        String uri = "http://localhost:8080/api/ptl/SubNode/"+scanData.getSubNodeId();
+
+        ScanData scanDatafromSubNode = setSubNode(uri, webClientBuilder, scanData);
+
+        if(scanDatafromSubNode == null) return null;
+
+        boolean subNodeIdFlag = scanData.getSubNodeId().equals(scanDatafromSubNode.getSubNodeId());
+        boolean subNodeACKFlag = "ACKOK".equals(scanDatafromSubNode.getScanDataACK());
+
+        if(subNodeIdFlag && subNodeACKFlag) {
+            scanData.setScanDataACK(scanData.ScanDataACKOK(true));
+            return scanData;
+        }
+        else {
+            scanDataRepo.deleteById(scanData.getId());
+        }
+        return null;
     }
 
     public List<ScanData> getAllScanData()
     {
         return scanDataRepo.findAll();
     }
+
+    public ScanData getScanDataById(String id)
+    {
+        return scanDataRepo.findById(id).get();
+    }
+
+    private ScannerNode getOtherAPI(String uri, ScannerNode scannerNode)
+    {
+        try{
+            RestTemplate restTemplate = new RestTemplate();
+            @SuppressWarnings("unchecked")
+            List<ScannerNode> result = restTemplate.getForObject(uri, List.class);
+            ObjectMapper mapper = new ObjectMapper();
+
+            return mapper.convertValue(result.get(0), new TypeReference<ScannerNode>() {});
+        }
+        catch (Exception e)
+        {
+            System.out.println("ScannerNode -> Master -> Server ACK FAIL, Exception: "+e);
+        }
+        return null;
+    }
+    private ScanData setSubNode(String uri, WebClient.Builder webClientBuilder, ScanData scanData)
+    {
+        System.out.println(scanData.getId());
+        try {
+            ScanData response = webClientBuilder.build().post()
+                    .uri(new URI(uri))
+                    .body(BodyInserters.fromValue(scanData))
+                    .retrieve()
+                    .bodyToMono(ScanData.class)
+                    .block();
+            System.out.println(response);
+            return response;
+        }
+        catch (Exception e)
+        {
+            System.out.println("Server -> SubNode GET FAIL, Exception: "+e);
+        }
+        return null;
+    }
+
 
 }

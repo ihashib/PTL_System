@@ -1,6 +1,7 @@
 package com.example.PTL_System.SubNode;
 
 import com.example.PTL_System.MasterNode.MasterNode;
+import com.example.PTL_System.ScannerNode.ScanData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,6 +27,18 @@ public class SubNodeService {
     {
         SubNode intertedSubNode = subNodeRepo.insert(subNode);
         return "Sub Node created, id: "+ intertedSubNode.getId();
+    }
+
+    public ScanData getSubNodeById(String id, ScanData scanData)
+    {
+        SubNode subNode = subNodeRepo.findById(id).get();
+
+        if(subNode.getSubNodeAndServerAck().equals(subNode.SubNodeACKOK(true))
+                && subNode.getId().equals(scanData.getSubNodeId())) {
+            scanData.setScanDataACK(scanData.ScanDataACKOK(true));
+        }
+
+        return scanData;
     }
 
     public String updateSubNodeById(String id, SubNode subNode)
