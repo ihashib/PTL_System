@@ -1,17 +1,13 @@
 package com.example.PTL_System.ScannerNode;
 
-import com.example.PTL_System.SubNode.SubNode;
+import com.example.PTL_System.ScanData.ScanData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.client.WebClient;
+
 
 import java.net.URI;
 import java.util.List;
@@ -21,7 +17,6 @@ import java.util.Optional;
 @Service
 public class ScannerNodeService {
     private final ScannerNodeRepo scannerNodeRepo;
-    private final ScanDataRepo scanDataRepo;
 
     public List<ScannerNode> getAllScannerNodes()
     {
@@ -98,39 +93,6 @@ public class ScannerNodeService {
         return "call post of scannernode from here and show on font end";
     }
 
-    public ScanData createScanData(ScanData scanData, WebClient.Builder webClientBuilder)
-    {
-        System.out.println("Start");
-        scanDataRepo.insert(scanData);
-
-        String uri = "http://localhost:8080/api/ptl/SubNode/"+scanData.getSubNodeId();
-
-        ScanData scanDatafromSubNode = setSubNode(uri, webClientBuilder, scanData);
-
-        if(scanDatafromSubNode == null) return null;
-
-        boolean subNodeIdFlag = scanData.getSubNodeId().equals(scanDatafromSubNode.getSubNodeId());
-        boolean subNodeACKFlag = "ACKOK".equals(scanDatafromSubNode.getScanDataACK());
-
-        if(subNodeIdFlag && subNodeACKFlag) {
-            scanData.setScanDataACK(scanData.ScanDataACKOK(true));
-            return scanData;
-        }
-        else {
-            scanDataRepo.deleteById(scanData.getId());
-        }
-        return null;
-    }
-
-    public List<ScanData> getAllScanData()
-    {
-        return scanDataRepo.findAll();
-    }
-
-    public ScanData getScanDataById(String id)
-    {
-        return scanDataRepo.findById(id).get();
-    }
 
     private ScannerNode getOtherAPI(String uri, ScannerNode scannerNode)
     {
@@ -148,25 +110,15 @@ public class ScannerNodeService {
         }
         return null;
     }
-    private ScanData setSubNode(String uri, WebClient.Builder webClientBuilder, ScanData scanData)
+    public ScanData setScanDataToScannerNodeById(String id, ScanData scanData)
     {
-        System.out.println(scanData.getId());
-        try {
-            ScanData response = webClientBuilder.build().post()
-                    .uri(new URI(uri))
-                    .body(BodyInserters.fromValue(scanData))
-                    .retrieve()
-                    .bodyToMono(ScanData.class)
-                    .block();
-            System.out.println(response);
-            return response;
+        ScannerNode scannerNode = scannerNodeRepo.findById(id).get();
+
+        if(scannerNode.getScannerNodeAndServerAck().equals(scannerNode.ScannerNodeACKOK(true))
+                && scannerNode.getId().equals(scanData.getScannerNodeId())) {
+            scanData.setScanDataACK(scanData.ScanDataACKOK(true));
         }
-        catch (Exception e)
-        {
-            System.out.println("Server -> SubNode GET FAIL, Exception: "+e);
-        }
-        return null;
+
+        return scanData;
     }
-
-
 }

@@ -1,5 +1,6 @@
 package com.example.PTL_System.ScannerNode;
 
+import com.example.PTL_System.ScanData.ScanData;
 import com.example.PTL_System.SubNode.SubNode;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.AllArgsConstructor;
@@ -13,9 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 public class ScannerNodeController {
     private final ScannerNodeService scannerNodeService;
-
-    @Autowired
-    private WebClient.Builder webClientBuilder;
 
     @GetMapping(value="api/ptl/allScannerNode")
     public List<ScannerNode> getAllScannerNodes()
@@ -52,21 +50,10 @@ public class ScannerNodeController {
         return scannerNodeService.getAllScannerNodes();
     }
 
-    @PostMapping(value="api/ptl/ScannerNode/ScanData/scan")
-    public ScanData createScannData(@RequestBody  ScanData scanData)
+    @PostMapping(value="api/ptl/ScannerNode/{id}")
+    public ScanData getSubNodeById(@PathVariable("id")String id, @RequestBody ScanData scanData)
     {
-        return scannerNodeService.createScanData(scanData, webClientBuilder);
+        return scannerNodeService.setScanDataToScannerNodeById(id, scanData);
     }
 
-    @GetMapping(value="api/ptl/ScannerNode/ScanData/all")
-    public List<ScanData> getAllScanData()
-    {
-        return scannerNodeService.getAllScanData();
-    }
-
-    @PostMapping(value="api/ptl/api/ptl/SubNode/{id}")
-    public ScanData getScanDataByID(@PathVariable("id")String id)
-    {
-        return scannerNodeService.getScanDataById(id);
-    }
 }

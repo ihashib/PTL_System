@@ -1,7 +1,6 @@
 package com.example.PTL_System.SubNode;
 
-import com.example.PTL_System.MasterNode.MasterNode;
-import com.example.PTL_System.ScannerNode.ScanData;
+import com.example.PTL_System.ScanData.ScanData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -25,12 +24,6 @@ public class SubNodeController {
     {
         return subNodeService.createSubNode(subNode);
     }
-    @PostMapping(value="api/ptl/SubNode/{id}")
-    public ScanData getSubNodeById(@PathVariable("id")String id, @RequestBody ScanData scanData)
-    {
-        return subNodeService.getSubNodeById(id, scanData);
-    }
-
 
     @PutMapping(value = "api/ptl/updateSubNodeById/{id}")
     public String updateSubNodeById(@PathVariable("id") String id, @RequestBody SubNode subNode)
@@ -53,5 +46,11 @@ public class SubNodeController {
     public List<SubNode> getDummyResponse()
     {
         return subNodeService.getAllSubNodes();
+    }
+
+    @PostMapping(value="api/ptl/SubNode/{id}")
+    public ScanData getSubNodeById(@PathVariable("id")String id, @RequestBody ScanData scanData)
+    {
+        return subNodeService.getSubNodeById(id, scanData);
     }
 }
